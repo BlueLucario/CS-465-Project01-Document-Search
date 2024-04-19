@@ -1,22 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import './QueryTile'
+import QueryTile from './QueryTile'
 
 function App() {
   const [count, setCount] = useState(0);
 
-  const [relevantDocuments, setRelevantDocuments] = useState([]);
-
-  useEffect(() => {
-    fetch('/api/getRelevantDocuments').then(res => res.json()).then(data => {
-      setRelevantDocuments(data)
-    });
-  }, []);
-
   return (
     <>
-      <div>
+      {/* <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -35,12 +29,8 @@ function App() {
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
-      </p>
-
-      <p>The relevant documents are {relevantDocuments.map(document => 
-        <li>{document}</li>
-      )}</p>
-      
+      </p> */}
+      <QueryTile />
     </>
   )
 }
