@@ -6,10 +6,25 @@ from typing import List
 from nltk.corpus import stopwords
 
 class AbstractInvertedIndex(ABC):
-    def __init__(self, documentPath='./documents'):
-        self.documentPath = documentPath
-        self.indexer = defaultdict(list)
-    
+    _instance = None
+    def __init__(self):
+        raise RuntimeError('Call getInstance() instead ')
+
+    @classmethod
+    def getInstance(cls, **kwargs):
+        if cls._instance is None:
+            print('Creating new inverted index...')
+            cls._instance = cls.__new__(cls)
+            cls._instance.documentPath = './documents' # Most likely overwritten by child class
+            cls._instance.indexer = defaultdict(list)
+
+            for property, value in kwargs.items():
+                setattr(cls._instance, property, value)
+
+            cls._instance.loadDocuments()
+        
+        return cls._instance
+        
     @abstractmethod
     def loadDocuments(self):
         pass
@@ -23,10 +38,12 @@ class AbstractInvertedIndex(ABC):
         pass
 
 class SimpleInvertedIndex(AbstractInvertedIndex):
-    def __init__(self, documentPath='./documents'):
-        super().__init__(documentPath)
-        self.stopWords = stopwords.words('english')
-        self.loadDocuments() # TODO: Think about loading sequence
+    @classmethod
+    def getInstance(cls, documentPath='./documents'):
+        return super().getInstance(
+            documentPath=documentPath, 
+            stopWords=stopwords.words('english')
+        )
 
     def getTokens(self, data):
         tokens = data.split()
@@ -43,7 +60,7 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
         id = 1
         while True:
             yield i
-            i += 1
+            id += 1
     
     def loadDocuments(self):
         for dirPath, dirNames, files in os.walk(self.documentPath):
@@ -63,7 +80,8 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
 
     def handleQuery(self, query: str) -> List[AbstractDocument]:
         queryWords = query.split()
-        commonDocuments = list(set.intersection(*map(set, [self.indexer[queryWord] for queryWord in queryWords if queryWord not in self.stopWords])))
+        postings = [self.indexer[queryWord] for queryWord in queryWords if queryWord not in self.stopWords]
+        commonDocuments = list(set.intersection(*map(set,postings))) if len(postings) > 0 else []
         return commonDocuments
 
 if __name__ == '__main__':

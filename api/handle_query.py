@@ -4,9 +4,7 @@ from inverted_index import AbstractInvertedIndex, SimpleInvertedIndex
 from document import AbstractDocument
     
 def getInvertedIndex() -> AbstractInvertedIndex:
-    invertedIndex = SimpleInvertedIndex()
-    while True:
-        yield invertedIndex
+    return SimpleInvertedIndex.getInstance()
 
 def handle_query(query: str) -> List[AbstractDocument]:
     invertedIndex = getInvertedIndex()
@@ -19,8 +17,9 @@ if __name__ == '__main__':
     3. Retrieve appropriate documents
     4. Return document names
     '''    
-    query = input('Enter query: ')
+    while True:
+        query = input('Enter query: ')
 
-    matchedDocuments = handle_query(query)
+        matchedDocuments = handle_query(query)
 
-    print(f'Matched documents for query {query}: {matchedDocuments}')
+        print(f'Matched documents for query {query}: {matchedDocuments}')
