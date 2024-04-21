@@ -84,6 +84,9 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
         commonDocuments = list(set.intersection(*map(set,postings))) if len(postings) > 0 else []
         return commonDocuments
 
+def getInvertedIndex() -> AbstractInvertedIndex:
+    return SimpleInvertedIndex.getInstance()
+
 if __name__ == '__main__':
     invertedIndex = SimpleInvertedIndex()
     query = 'cookie and milk'

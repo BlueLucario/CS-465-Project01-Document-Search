@@ -1,10 +1,6 @@
-from abc import ABC, abstractmethod
 from typing import List
-from inverted_index import AbstractInvertedIndex, SimpleInvertedIndex
+from inverted_index import getInvertedIndex
 from document import AbstractDocument
-    
-def getInvertedIndex() -> AbstractInvertedIndex:
-    return SimpleInvertedIndex.getInstance()
 
 def handle_query(query: str) -> List[AbstractDocument]:
     invertedIndex = getInvertedIndex()

@@ -12,10 +12,9 @@ export default function QueryTile() {
     const [loading, setLoading] = useState(false);
 
     function sendQuery() {
-        setLoading(true)
-        console.log('Loading true')
+        setLoading(true);
 
-        fetch(`/api/getRelevantDocuments/${query}`)
+        fetch(`/api/relevantDocuments/${query}`)
         .then(res => res.json())
         .then(data => setRelevantDocuments(data))
         .finally(() => setLoading(false));
