@@ -30,7 +30,9 @@ export default function UploadTile() {
             })
             .catch(err => {
                 setSeverity("error"); 
-                err.response.text().then((data: string) => setHelperText(`ERROR: ${data}`));
+                err.response.text().then((data: string) => (data.trim() != '') 
+                ? setHelperText(`Error: ${data}`) 
+                : setHelperText(`${err}`));
             })
             .finally(() => {setOpen(true); e.target.value='';});
         }
@@ -42,15 +44,19 @@ export default function UploadTile() {
                 Upload file
                 <TextField type="file" style={{ display: 'none' }} inputProps={{accept:".txt"}} onChange={uploadFile} />
             </Button>
-            <Collapse in={open}>
-                <Alert severity={severity} variant="outlined" action={
-                    <IconButton size="small" onClick={() => setOpen(false)}>
-                        <CloseIcon fontSize="inherit" />
-                    </IconButton>
-                }>
-                    {helperText}
-                </Alert>
-            </Collapse>         
+
+            {/* Sticky header alert */}
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 999 }}>
+                <Collapse in={open}>
+                    <Alert severity={severity} variant="outlined" action={
+                        <IconButton size="small" onClick={() => setOpen(false)}>
+                            <CloseIcon fontSize="inherit" />
+                        </IconButton>
+                    }>
+                        {helperText}
+                    </Alert>
+                </Collapse>    
+            </div>     
         </>
     );
 }
