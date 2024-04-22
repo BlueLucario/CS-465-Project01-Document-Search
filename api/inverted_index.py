@@ -59,7 +59,7 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
 	def _getNextId(self):
 		id = 1
 		while True:
-			yield i
+			yield id
 			id += 1
 	
 	def loadDocuments(self):
@@ -91,3 +91,4 @@ if __name__ == '__main__':
 	invertedIndex = SimpleInvertedIndex()
 	query = 'cookie and milk'
 	print(f'Results of query {query} = {invertedIndex.handleQuery(query)}')
+
