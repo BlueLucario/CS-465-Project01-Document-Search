@@ -21,6 +21,7 @@ class AbstractInvertedIndex(ABC):
 			for property, value in kwargs.items():
 				setattr(cls._instance, property, value)
 
+<<<<<<< HEAD
 			cls._instance.loadDocuments()
 		
 		return cls._instance
@@ -28,6 +29,18 @@ class AbstractInvertedIndex(ABC):
 	@abstractmethod
 	def loadDocuments(self):
 		pass
+=======
+            cls._instance.loadDocuments()
+        
+        return cls._instance
+        
+    def loadDocuments(self):
+        for dirPath, dirNames, files in os.walk(self.documentPath):
+            print(f'Found directory: {dirPath}')
+            for fileName in files:
+                fullPath = os.path.join(dirPath, fileName)
+                self.loadDocument(fullPath)    
+>>>>>>> 9b477dd467f918fa1a1c07405595b57357c7dc0a
 
 	@abstractmethod
 	def loadDocument(self, path):
@@ -56,6 +69,7 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
 		
 		return filteredTokens
 
+<<<<<<< HEAD
 	def _getNextId(self):
 		id = 1
 		while True:
@@ -77,6 +91,22 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
 			
 			for token in tokens:
 				self.indexer[token].append(document)
+=======
+    def _getNextId(self):
+        id = 1
+        while True:
+            yield id
+            id += 1
+    
+    def loadDocument(self, path):
+        document = SimpleDocument(path, id=self._getNextId())
+        with open(path, 'r') as file:
+            data = file.read()
+            tokens = self.getTokens(data)
+            
+            for token in tokens:
+                self.indexer[token].append(document)
+>>>>>>> 9b477dd467f918fa1a1c07405595b57357c7dc0a
 
 	def handleQuery(self, query: str) -> List[AbstractDocument]:
 		queryWords = query.split()

@@ -1,7 +1,6 @@
 import './App.css'
 import './QueryTile'
 import QueryTile from './QueryTile'
-import UploadTile from './UploadTile'
 import Grid from '@mui/material/Grid';
 
 function App() {
