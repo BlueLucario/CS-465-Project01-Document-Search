@@ -59,7 +59,7 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
     def _getNextId(self):
         id = 1
         while True:
-            yield i
+            yield id
             id += 1
     
     def loadDocuments(self):
