@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import { Box, ListItem, ListItemText } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
+import UploadTile from './UploadTile'
 
 export default function QueryTile() {
     const [relevantDocuments, setRelevantDocuments] = useState([]);
@@ -16,7 +17,7 @@ export default function QueryTile() {
 
         fetch(`/api/relevantDocuments/${query}`)
         .then(res => res.json())
-        .then(data => setRelevantDocuments(data))
+        .then(data => setRelevantDocuments((data.length == 0) ? ['No documents found'] : data))
         .finally(() => setLoading(false));
     }
 
@@ -33,6 +34,9 @@ export default function QueryTile() {
                     endIcon={<SendIcon/>} loadingPosition="end" variant="contained">
                         <span>Send</span>
                     </LoadingButton>
+                </Grid>
+                <Grid item>
+                    <UploadTile />
                 </Grid>
             </Grid> 
 

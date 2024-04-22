@@ -9,7 +9,7 @@ function App() {
     <>
       <Grid container direction="column" spacing={2}>
         <Grid item>
-          <UploadTile />
+          <h1>Document Retrieval</h1>
         </Grid>
         <Grid item>
           <QueryTile />
