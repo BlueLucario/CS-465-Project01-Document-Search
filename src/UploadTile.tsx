@@ -15,12 +15,13 @@ export default function UploadTile() {
 
     function uploadFile(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files) {
-            let fileData = new FormData();
+            const fileData = new FormData();
             fileData.append("file", e.target.files[0]);
             fetch('/api/relevantDocuments', {method: 'POST', body: fileData})
             .then((res) => {
                 if (!res.ok) {
-                    let error = new Error(res.statusText);
+                    const error = new Error(res.statusText);
+                    console.log(error)
                     error.response = res;
                     error.status = res.status;
                     throw error

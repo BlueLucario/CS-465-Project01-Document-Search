@@ -25,9 +25,12 @@ class AbstractInvertedIndex(ABC):
         
         return cls._instance
         
-    @abstractmethod
     def loadDocuments(self):
-        pass
+        for dirPath, dirNames, files in os.walk(self.documentPath):
+            print(f'Found directory: {dirPath}')
+            for fileName in files:
+                fullPath = os.path.join(dirPath, fileName)
+                self.loadDocument(fullPath)    
 
     @abstractmethod
     def loadDocument(self, path):
@@ -59,15 +62,8 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
     def _getNextId(self):
         id = 1
         while True:
-            yield i
+            yield id
             id += 1
-    
-    def loadDocuments(self):
-        for dirPath, dirNames, files in os.walk(self.documentPath):
-            print(f'Found directory: {dirPath}')
-            for fileName in files:
-                fullPath = os.path.join(dirPath, fileName)
-                self.loadDocument(fullPath)                
     
     def loadDocument(self, path):
         document = SimpleDocument(path, id=self._getNextId())
