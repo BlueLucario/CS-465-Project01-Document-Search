@@ -4,6 +4,7 @@ from collections import defaultdict
 from document import SimpleDocument, AbstractDocument
 from typing import List
 from nltk.corpus import stopwords
+from preprocess import Preprocess
 
 class AbstractInvertedIndex(ABC):
     _instance = None
@@ -79,11 +80,58 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
         postings = [self.indexer[queryWord] for queryWord in queryWords if queryWord not in self.stopWords]
         commonDocuments = list(set.intersection(*map(set,postings))) if len(postings) > 0 else []
         return commonDocuments
+    
+class InvertedIndexWithPreprocessPipeline(AbstractInvertedIndex):
+    @classmethod
+    def getInstance(cls, documentPath='./documents', preprocessPipeline=[]):
+        return super().getInstance(
+            documentPath=documentPath,
+            preprocessPipeline=preprocessPipeline
+        )
+
+    def getTokens(self, data: str):
+        assert type(data) is str
+        processedTokens = [data]
+
+        for process in self.preprocessPipeline:
+            processedTokens = process(processedTokens)
+
+        return processedTokens
+
+    def _getNextId(self):
+        id = 1
+        while True:
+            yield id
+            id += 1
+    
+    def loadDocument(self, path):
+        document = SimpleDocument(path, id=self._getNextId())
+        with open(path, 'r') as file:
+            data = file.read()
+            tokens = self.getTokens(data)
+            
+            for token in tokens:
+                self.indexer[token].append(document)
+
+    def handleQuery(self, query: str) -> List[AbstractDocument]:
+        queryWords = self.getTokens(queryWords)
+        postings = [self.indexer[queryWord] for queryWord in queryWords]
+        commonDocuments = list(set.intersection(*map(set,postings))) if len(postings) > 0 else []
+        return commonDocuments
 
 def getInvertedIndex() -> AbstractInvertedIndex:
-    return SimpleInvertedIndex.getInstance()
+    return InvertedIndexWithPreprocessPipeline.getInstance(preprocessPipeline=[
+        Preprocess.splitByWhitespace,
+        Preprocess.splitBySpecialCharacter,
+        Preprocess.removeTokenWithNumber,
+        Preprocess.removeStopwords,
+        Preprocess.removeEmptyString, # IMPORTANT: Order matters for this one
+        Preprocess.toLower,
+    ])
 
 if __name__ == '__main__':
-    invertedIndex = SimpleInvertedIndex()
+    invertedIndex = getInvertedIndex()
     query = 'cookie and milk'
     print(f'Results of query {query} = {invertedIndex.handleQuery(query)}')
+        
+
