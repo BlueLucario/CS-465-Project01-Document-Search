@@ -8,48 +8,48 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import UploadTile from './UploadTile'
 
 export default function QueryTile() {
-    const [relevantDocuments, setRelevantDocuments] = useState([]);
-    const [query, setQuery] = useState('');
-    const [loading, setLoading] = useState(false);
+	const [relevantDocuments, setRelevantDocuments] = useState([]);
+	const [query, setQuery] = useState('');
+	const [loading, setLoading] = useState(false);
 
-    function sendQuery() {
-        setLoading(true);
+	function sendQuery() {
+		setLoading(true);
 
-        fetch(`/api/relevantDocuments/${query}`)
-        .then(res => res.json())
-        .then(data => setRelevantDocuments((data.length == 0) ? ['No documents found'] : data))
-        .finally(() => setLoading(false));
-    }
+		fetch(`/api/relevantDocuments/${query}`)
+				.then(res => res.json())
+				.then(data => setRelevantDocuments((data.length == 0) ? ['No documents found'] : data))
+				.finally(() => setLoading(false));
+	}
 
-    return (
-        <>
-            <Grid container spacing={1} alignItems="center">
-                <Grid item>
-                    <TextField style={{width: 350}} id="search-query" label="Search query"
-                        variant="outlined" onChange={(e)=>setQuery(e.target.value)} 
-                        onKeyDown={(e) => {if(e.key == 'Enter') {sendQuery()}}}/>
-                </Grid>
-                <Grid item>
-                    <LoadingButton id="send-query" onClick={sendQuery} loading={loading}
-                    endIcon={<SendIcon/>} loadingPosition="end" variant="contained">
-                        <span>Send</span>
-                    </LoadingButton>
-                </Grid>
-                <Grid item>
-                    <UploadTile />
-                </Grid>
-            </Grid> 
+	return (
+		<>
+			<Grid container spacing={1} alignItems="center">
+				<Grid item>
+					<TextField style={{width: 350}} id="search-query" label="Search query"
+						variant="outlined" onChange={(e)=>setQuery(e.target.value)} 
+						onKeyDown={(e) => {if (e.key == 'Enter') {sendQuery()}}}/>
+				</Grid>
+				<Grid item>
+					<LoadingButton id="send-query" onClick={sendQuery} loading={loading}
+					endIcon={<SendIcon/>} loadingPosition="end" variant="contained">
+						<span>Send</span>
+					</LoadingButton>
+				</Grid>
+				<Grid item>
+					<UploadTile />
+				</Grid>
+			</Grid> 
 
-            <p>Relevant documents:</p>
-            <Box sx={{maxHeight: '300px', overflow: 'auto'}}>
-                <span>{relevantDocuments.map(document => 
-                    <List key={`list-${document}`}>
-                        <ListItem key={`listItem-${document}`}>
-                            <ListItemText key={`listItemText-${document}`} primary={document} />
-                        </ListItem>
-                    </List>
-                )}</span>
-            </Box>
-        </>
-    );
+			<p>Relevant documents:</p>
+			<Box sx={{maxHeight: '300px', overflow: 'auto'}}>
+				<span>{relevantDocuments.map(document => 
+					<List key={`list-${document}`}>
+						<ListItem key={`listItem-${document}`}>
+							<ListItemText key={`listItemText-${document}`} primary={document} />
+						</ListItem>
+					</List>
+				)}</span>
+			</Box>
+		</>
+	);
 }
