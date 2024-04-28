@@ -1,5 +1,6 @@
 from handle_query import handle_query
 from upload_document import upload_document
+from generate_statistics import generate_statistics
 from flask import Flask, request
 from markupsafe import escape
 import json
@@ -29,3 +30,7 @@ def addRelevantDocument():
 		return "File not uploaded successfully", 500
 	
 	return 'File uploaded successfully!', 200
+
+@app.route('/api/statistics', methods=['GET'])
+def generateStatistics():
+    return json.dumps(generate_statistics())

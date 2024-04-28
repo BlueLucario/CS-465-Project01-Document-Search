@@ -11,6 +11,14 @@ class AbstractDocument(ABC):
 		return self.name
 
 class SimpleDocument(AbstractDocument):
-	def __init__(self, name: str, id: int):
-		super().__init__(name)
-		self.id = id
+    def __init__(self, name: str, id: int):
+        super().__init__(name)
+        self.id = id
+
+class FlexibleDocument(AbstractDocument):
+    def __init__(self, name: str, id: int, **kwargs):
+        super().__init__(name)
+        self.id = id
+
+        for property, value in kwargs.items():
+            setattr(self, property, value)

@@ -8,37 +8,11 @@ import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
 
 
-export default function UploadTile() {
+export default function UploadIcon() {
 	const [severity, setSeverity] = useState("success");
 	const [helperText, setHelperText] = useState('')
 	const [open, setOpen] = useState(false);
 
-<<<<<<< HEAD
-	function uploadFile(e: React.ChangeEvent<HTMLInputElement>) {
-		if (e.target.files) {
-			let fileData = new FormData();
-			fileData.append("file", e.target.files[0]);
-			fetch('/api/relevantDocuments', {method: 'POST', body: fileData})
-			.then((res) => {
-				if (!res.ok) {
-					let error = new Error(res.statusText);
-					error.response = res;
-					error.status = res.status;
-					throw error
-				}
-				setHelperText('File uploaded successfully!');
-				setSeverity('success');
-			})
-			.catch(err => {
-				setSeverity("error"); 
-				err.response.text().then((data: string) => (data.trim() != '') 
-				? setHelperText(`Error: ${data}`) 
-				: setHelperText(`${err}`));
-			})
-			.finally(() => {setOpen(true); e.target.value='';});
-		}
-	}
-=======
     function uploadFile(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files) {
             const fileData = new FormData();
@@ -64,7 +38,6 @@ export default function UploadTile() {
             .finally(() => {setOpen(true); e.target.value='';});
         }
     }
->>>>>>> 9b477dd467f918fa1a1c07405595b57357c7dc0a
 
 	return (
 		<>

@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import { Box, ListItem, ListItemText } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import UploadTile from './UploadTile'
+import UploadIcon from './UploadIcon';
 
 export default function QueryTile() {
 	const [relevantDocuments, setRelevantDocuments] = useState([]);
@@ -36,7 +36,7 @@ export default function QueryTile() {
 					</LoadingButton>
 				</Grid>
 				<Grid item>
-					<UploadTile />
+					<UploadIcon />
 				</Grid>
 			</Grid> 
 

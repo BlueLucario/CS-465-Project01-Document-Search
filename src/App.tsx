@@ -2,6 +2,7 @@ import './App.css'
 import './QueryTile'
 import QueryTile from './QueryTile'
 import Grid from '@mui/material/Grid';
+import DownloadStats from './DownloadStats';
 
 function App() {
 	return (
@@ -14,6 +15,10 @@ function App() {
 					<QueryTile />
 				</Grid>
 			</Grid>
+
+			<div style={{ position: "absolute", bottom: 10, right: 10, zIndex: 999 }}>
+				<DownloadStats/>
+			</div>
 		</>
 	)
 }
