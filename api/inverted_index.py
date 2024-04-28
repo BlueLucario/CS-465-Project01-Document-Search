@@ -98,15 +98,15 @@ class InvertedIndexWithPreprocessPipeline(AbstractInvertedIndex):
 
 	def loadDocument(self, path):
 		document = SimpleDocument(path, id=self._getNextId())
-		with open(path, 'r') as file:
+		with open(path, 'r', encoding='utf-8') as file:
 			data = file.read()
-			tokens = self.getTokens(data)	
+			tokens = self.getTokens(data)
 			for token in tokens:
 				self.indexer[token].append(document)
 
 	def handleQuery(self, query: str) -> List[AbstractDocument]:
-		queryWords = self.getTokens(queryWords)
-		postings = [self.indexer[queryWord] for queryWord in queryWords]
+		queryWords = self.getTokens(query)
+		postings = [self.indexer[queryWords] for queryWord in queryWords]
 		commonDocuments = list(set.intersection(*map(set,postings))) if len(postings) > 0 else []
 		return commonDocuments
 
