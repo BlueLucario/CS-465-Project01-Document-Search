@@ -60,7 +60,7 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
             token = token.lower()
             if not any(let.isdigit() for let in token) and token not in self.stopWords:
                 filteredTokens.append(token)
-		
+        
         return filteredTokens
 
     def _getNextId(self):
@@ -88,34 +88,34 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
         return {}
     
 class InvertedIndexWithPreprocessPipeline(AbstractInvertedIndex):
-	@classmethod
-	def getInstance(cls, documentPath='./documents', preprocessPipeline=[]):
-		return super().getInstance(
-			documentPath=documentPath,
-			preprocessPipeline=preprocessPipeline
-		)
+    @classmethod
+    def getInstance(cls, documentPath='./documents', preprocessPipeline=[]):
+        return super().getInstance(
+            documentPath=documentPath,
+            preprocessPipeline=preprocessPipeline
+        )
 
-	def getTokens(self, data: str):
-		assert type(data) is str
-		processedTokens = [data]
-		for process in self.preprocessPipeline:
-			processedTokens = process(processedTokens)
-		return processedTokens
+    def getTokens(self, data: str):
+        assert type(data) is str
+        processedTokens = [data]
+        for process in self.preprocessPipeline:
+            processedTokens = process(processedTokens)
+        return processedTokens
 
-	def _getNextId(self):
-		id = 1
-		while True:
-			yield id
-			id += 1
+    def _getNextId(self):
+        id = 1
+        while True:
+            yield id
+            id += 1
 
-	def loadDocument(self, path):
-		document = SimpleDocument(path, id=self._getNextId())
-		with open(path, 'r', encoding='utf-8') as file:
-			data = file.read()
-			tokens = self.getTokens(data)
-			for token in tokens:
-				self.indexer[token].append(document)
-
+    def loadDocument(self, path):
+        document = SimpleDocument(path, id=self._getNextId())
+        with open(path, 'r', encoding='utf-8') as file:
+            data = file.read()
+            tokens = self.getTokens(data)
+            for token in tokens:
+                self.indexer[token].append(document)
+    
     def _getNextId(self):
         id = 1
         while True:
