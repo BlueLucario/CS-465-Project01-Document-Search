@@ -3,11 +3,11 @@ import { useState } from 'react';
 import SendIcon from '@mui/icons-material/Send';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
-import { Box, ListItem, ListItemText } from '@mui/material';
+import { AlertColor, Box, ListItem, ListItemText } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import UploadIcon from './UploadIcon';
 
-export default function QueryTile() {
+export default function QueryTile(props: { showSnackbar: (severity: AlertColor, message: string) => void; }) {
 	const [relevantDocuments, setRelevantDocuments] = useState([]);
 	const [query, setQuery] = useState('');
 	const [loading, setLoading] = useState(false);
@@ -16,8 +16,25 @@ export default function QueryTile() {
 		setLoading(true);
 
 		fetch(`/api/relevantDocuments/${query}`)
-				.then(res => res.json())
+				.then(res => {
+					if (!res.ok) {
+                        const error = new Error(res.statusText);
+                        console.log(error);
+                        error.response = res;
+                        error.status = res.status;
+                        throw error;
+                    }
+					
+					return res.json()
+				})
 				.then(data => setRelevantDocuments((data.length == 0) ? ['No documents found'] : data))
+				.catch((err) => {
+                    err.response.text().then((data: string) => {
+                        const message = (data.trim() != '') ? `Error: ${data}` : `${err}`;
+                        const severity = "error";
+                        props.showSnackbar(severity, message);
+                    })
+                })
 				.finally(() => setLoading(false));
 	}
 
@@ -36,7 +53,7 @@ export default function QueryTile() {
 					</LoadingButton>
 				</Grid>
 				<Grid item>
-					<UploadIcon />
+					<UploadIcon showSnackbar={props.showSnackbar}/>
 				</Grid>
 			</Grid> 
 

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import { AlertColor } from '@mui/material';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -17,8 +18,25 @@ const style = {
   p: 4,
 };
 
-export default function DownloadStats() {
+interface StatSummary {
+    "Total number of distinct words": number;
+    "Total number of words encountered": number;
+    "Top 100th word": [string, number];
+    "Top 500th word": [string, number];
+    "Top 1000th word": [string, number];
+}
+
+const defaultStatSummary: StatSummary = {
+    "Total number of distinct words": -1,
+    "Total number of words encountered": -1,
+    "Top 100th word": ["N/A", -1],
+    "Top 500th word": ["N/A", -1],
+    "Top 1000th word": ["N/A", -1],
+}
+
+export default function DownloadStats(props: { showSnackbar: (severity: AlertColor, message: string) => void; }) {
     const [statistics, setStatistics] = useState({});
+    const [statSummary, setStatSummary] = useState<StatSummary>(defaultStatSummary);
     const [open, setOpen] = useState(false);
 
     const downloadFile = (data: string, fileName: string, fileType: string) => {
@@ -40,9 +58,26 @@ export default function DownloadStats() {
 
     function showStatistics() {
 		fetch(`/api/statistics`)
-				.then(res => res.json())
-				.then(data => setStatistics(data))
+				.then(res => {
+                    if (!res.ok) {
+                        const error = new Error(res.statusText);
+                        console.log(error);
+                        error.response = res;
+                        error.status = res.status;
+                        throw error;
+                    }
+
+                    return res.json()
+                })
+				.then(data => {setStatistics(data); setStatSummary(data);})
                 .then(() => setOpen(true))
+                .catch((err) => {
+                    err.response.text().then((data: string) => {
+                        const message = (data.trim() != '') ? `Error: ${data}` : `${err}`;
+                        const severity = "error";
+                        props.showSnackbar(severity, message);
+                    })
+                })
 	}
 
     function downloadStatistics() {
@@ -64,11 +99,11 @@ export default function DownloadStats() {
                 Statistics
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                <p><strong>Total number of distinct words:</strong> {statistics['Total number of distinct words']}</p>
-                <p><strong>Total number of words encountered:</strong> {statistics['Total number of words encountered']}</p>
-                <p><strong>Top 100th word:</strong> {statistics['Top 100th word'][0]} (frequency: {statistics['Top 100th word'][1]})</p>
-                <p><strong>Top 500th word:</strong> {statistics['Top 500th word'][0]} (frequency: {statistics['Top 500th word'][1]})</p>
-                <p><strong>Top 1000th word:</strong> {statistics['Top 1000th word'][0]} (frequency: {statistics['Top 1000th word'][1]})</p>
+                <p><strong>Total number of distinct words:</strong> {statSummary['Total number of distinct words']}</p>
+                <p><strong>Total number of words encountered:</strong> {statSummary['Total number of words encountered']}</p>
+                <p><strong>Top 100th word:</strong> {statSummary['Top 100th word'][0]} (frequency: {statSummary['Top 100th word'][1]})</p>
+                <p><strong>Top 500th word:</strong> {statSummary['Top 500th word'][0]} (frequency: {statSummary['Top 500th word'][1]})</p>
+                <p><strong>Top 1000th word:</strong> {statSummary['Top 1000th word'][0]} (frequency: {statSummary['Top 1000th word'][1]})</p>
                 <Button onClick={downloadStatistics}>Download full statistics</Button>
             </Typography>
             </Box>
