@@ -25,7 +25,7 @@ class Preprocess:
 
     @classmethod
     def toLower(cls, tokens: List[str]):
-        return [token.toLowerCase() for token in tokens]
+        return [token.lower() for token in tokens]
 
     @classmethod
     def splitBySpecialCharacter(cls, tokens: List[str]):
@@ -38,52 +38,44 @@ class Preprocess:
     @classmethod
     def removeEmptyString(cls, tokens: List[str]):
         return [token for token in tokens if token.strip() != '']
-
+    
     @classmethod
     def stringToSoundex(cls, tokens: List[str]):
-        dropCharList = str.maketrans("", "", "aehiouwy")
+        processedTokens = []
         for token in tokens:
             #Pop first letter for later
-            soundexCode = token[0].toUpperCase()
-            token = token[1:].toLowerCase().translate(dropCharList)
+            token = token.upper()
+            firstLet, token = token[0], token[1:]
+            
             #Get number values
-            numToken = ""
-            i = 0
-            while i < len(token): #for loop
-                c = token[i]
-                if c in 'BFPV':
-                    numToken = numToken+'1'
-                elif c in 'CGJKQSXZ':
-                    numToken = numToken+'2'
-                elif c in 'DT':
-                    numToken = numToken+'3'
-                elif c=='L':
-                    numToken = numToken+'4'
-                elif c in 'MN':
-                    numToken = numToken+'5'
-                elif c=='R':
-                    numToken = numToken+'6'
-                i += 1
+            numCode = ""
+            for let in token:
+                if let in 'AEHIOUWY':
+                    numCode += '0'
+                elif let in 'BFPV':
+                    numCode += '1'
+                elif let in 'CGJKQSXZ':
+                    numCode += '2'
+                elif let in 'DT':
+                    numCode += '3'
+                elif let in 'L':
+                    numCode += '4'
+                elif let in 'MN':
+                    numCode += '5'
+                elif let in 'R':
+                    numCode += '6'
+                    
             # Remove adjacent duplicates
-            token = numToken[-1]
-            if len(numToken) > 1:
-                c = numToken[-2]
-                i = len(numToken) - 2
-                while i >= 0:
-                    i = i-1
-                    if i >= 0:
-                        if c != numToken[i]:
-                            c = numToken[i]
-                            token = c+token
-            length = len(token)
-            if length < 3:
-                soundexCode = soundexCode + token
-                soundexCode.ljust(4, '0')
-            elif length > 3:
-                soundexCode = soundexCode + token[2]
-            elif length == 3:
-                soundexCode = soundexCode + token
-            token = soundexCode
-
-
-
+            i = 0
+            while i < len(numCode)-1:
+                if numCode[i] == numCode[i+1]:
+                    numCode = numCode[:i] + numCode[i+1:]
+                else:
+                    i +=1
+            
+            # Add trailing 0s if necessary
+            soundexCode = (firstLet + numCode).ljust(4, '0')
+            
+            processedTokens.append(soundexCode[:4])
+            
+        return processedTokens
