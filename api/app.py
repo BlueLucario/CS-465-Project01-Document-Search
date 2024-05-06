@@ -5,7 +5,6 @@ from flask import Flask, request
 from markupsafe import escape
 import json
 from pathlib import Path
-Path('my_file.mp3').suffix == '.mp3'
 
 app = Flask(__name__)
 

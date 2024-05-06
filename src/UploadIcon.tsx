@@ -1,6 +1,7 @@
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { AlertColor } from '@mui/material';
 
 
 export default function UploadIcon(props: { showSnackbar: (severity: AlertColor, message: string) => void; }) {

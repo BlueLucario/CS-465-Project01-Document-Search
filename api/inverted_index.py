@@ -17,6 +17,11 @@ class AbstractInvertedIndex(ABC):
             print('Creating new inverted index...')
             cls._instance = cls.__new__(cls)
             cls._instance.documentPath = './documents' # Most likely overwritten by child class
+            cls._instance.preprocessPipeline = [
+                Preprocess.splitByWhitespace,
+                Preprocess.removeEmptyString,
+                Preprocess.toLower,
+            ] # Likely overwritten
             cls._instance.indexer = defaultdict(list)
             cls._instance.id = 0
 
@@ -25,6 +30,13 @@ class AbstractInvertedIndex(ABC):
     
             cls._instance.loadDocuments()
         return cls._instance
+    
+    def getTokens(self, data: str):
+        assert type(data) is str
+        processedTokens = [data]
+        for process in self.preprocessPipeline:
+            processedTokens = process(processedTokens)
+        return processedTokens
     
     def _getNextId(self):
         id = self.id
@@ -55,19 +67,15 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
     def getInstance(cls, documentPath='./documents'):
         return super().getInstance(
             documentPath=documentPath,
+            preprocessPipeline=[
+                Preprocess.splitByWhitespace,
+                Preprocess.removeTokenWithNumber,
+                Preprocess.removeEmptyString,
+                Preprocess.removeStopwords,
+                Preprocess.removeEmptyString,
+            ],
             stopWords=stopwords.words('english')
         )
-
-    def getTokens(self, data):
-        tokens = data.split()
-
-        filteredTokens = []
-        for token in tokens:
-            token = token.lower()
-            if not any(let.isdigit() for let in token) and token not in self.stopWords:
-                filteredTokens.append(token)
-        
-        return filteredTokens
             
     def loadDocument(self, path):
         document = SimpleDocument(path, id=self._getNextId())
@@ -86,48 +94,7 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
 
     def generateStatistics(self) -> dict:
         return {}
-    
-class InvertedIndexWithPreprocessPipeline(AbstractInvertedIndex):
-    @classmethod
-    def getInstance(cls, documentPath='./documents', preprocessPipeline=[]):
-        return super().getInstance(
-            documentPath=documentPath,
-            preprocessPipeline=preprocessPipeline
-        )
 
-    def getTokens(self, data: str):
-        assert type(data) is str
-        processedTokens = [data]
-        for process in self.preprocessPipeline:
-            processedTokens = process(processedTokens)
-        return processedTokens
-
-    def loadDocument(self, path):
-        document = SimpleDocument(path, id=self._getNextId())
-        with open(path, 'r', encoding='utf-8') as file:
-            data = file.read()
-            tokens = self.getTokens(data)
-            for token in tokens:
-                self.indexer[token].append(document)
-    
-    def loadDocument(self, path):
-        document = SimpleDocument(path, id=self._getNextId())
-        with open(path, 'r', encoding='utf-8') as file:
-            data = file.read()
-            tokens = self.getTokens(data)
-            
-            for token in tokens:
-                self.indexer[token].append(document)
-
-    def handleQuery(self, query: str) -> List[AbstractDocument]:
-        queryWords = self.getTokens(query)
-        postings = [self.indexer[queryWord] for queryWord in queryWords]
-        commonDocuments = list(set.intersection(*map(set,postings))) if len(postings) > 0 else []
-        return commonDocuments
-    
-    def generateStatistics(self) -> dict:
-        return {}
-    
 class InvertedIndexWithStats(AbstractInvertedIndex):
     @classmethod
     def getInstance(cls, documentPath='./documents'):
@@ -138,17 +105,6 @@ class InvertedIndexWithStats(AbstractInvertedIndex):
             termFrequency={},
             id=1
         )
-
-    def getTokens(self, data):
-        tokens = data.split()
-
-        filteredTokens = []
-        for token in tokens:
-            token = token.lower()
-            if not any(let.isdigit() for let in token) and token not in self.stopWords:
-                filteredTokens.append(token)
-        
-        return filteredTokens
     
     def loadDocument(self, path):
         with open(path, 'r', encoding='utf-8') as file:
