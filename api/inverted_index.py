@@ -18,12 +18,18 @@ class AbstractInvertedIndex(ABC):
             cls._instance = cls.__new__(cls)
             cls._instance.documentPath = './documents' # Most likely overwritten by child class
             cls._instance.indexer = defaultdict(list)
+            cls._instance.id = 0
 
             for property, value in kwargs.items():
                 setattr(cls._instance, property, value)
     
             cls._instance.loadDocuments()
         return cls._instance
+    
+    def _getNextId(self):
+        id = self.id
+        self.id += 1
+        return id
         
     def loadDocuments(self):
         for dirPath, dirNames, files in os.walk(self.documentPath):
@@ -62,12 +68,6 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
                 filteredTokens.append(token)
         
         return filteredTokens
-
-    def _getNextId(self):
-        id = 1
-        while True:
-            yield id
-            id += 1
             
     def loadDocument(self, path):
         document = SimpleDocument(path, id=self._getNextId())
@@ -102,12 +102,6 @@ class InvertedIndexWithPreprocessPipeline(AbstractInvertedIndex):
             processedTokens = process(processedTokens)
         return processedTokens
 
-    def _getNextId(self):
-        id = 1
-        while True:
-            yield id
-            id += 1
-
     def loadDocument(self, path):
         document = SimpleDocument(path, id=self._getNextId())
         with open(path, 'r', encoding='utf-8') as file:
@@ -115,12 +109,6 @@ class InvertedIndexWithPreprocessPipeline(AbstractInvertedIndex):
             tokens = self.getTokens(data)
             for token in tokens:
                 self.indexer[token].append(document)
-    
-    def _getNextId(self):
-        id = 1
-        while True:
-            yield id
-            id += 1
     
     def loadDocument(self, path):
         document = SimpleDocument(path, id=self._getNextId())
@@ -161,11 +149,6 @@ class InvertedIndexWithStats(AbstractInvertedIndex):
                 filteredTokens.append(token)
         
         return filteredTokens
-    
-    def _getNextId(self):
-        id = self.id
-        self.id += 1
-        return id
     
     def loadDocument(self, path):
         with open(path, 'r', encoding='utf-8') as file:
