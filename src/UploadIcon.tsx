@@ -19,8 +19,8 @@ export default function UploadIcon(props: { showSnackbar: (severity: AlertColor,
                     error.status = res.status;
                     throw error
                 }
-                setHelperText('File uploaded successfully!');
-                setSeverity('success');
+
+                props.showSnackbar("success", "File uploaded successfully")
             })
             .catch((err) => {
                 err.response.text().then((data: string) => {
