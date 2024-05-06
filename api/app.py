@@ -35,3 +35,6 @@ def addRelevantDocument():
 @app.route('/api/statistics', methods=['GET'])
 def generateStatistics():
     return json.dumps(generate_statistics())
+
+if __name__ == "__main__":
+    app.run(debug=True)
