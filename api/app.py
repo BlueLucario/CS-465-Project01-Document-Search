@@ -12,25 +12,25 @@ handle_query("") # Loads inverted index on startup
 
 @app.route('/api/relevantDocuments/<query>', methods=['GET'])
 def getRelevantDocuments(query):
-	relevantDocs = handle_query(escape(query))
-	return json.dumps(relevantDocs, default=lambda x:str(x))
+    relevantDocs = handle_query(escape(query))
+    return json.dumps(relevantDocs, default=lambda x:str(x))
 
 @app.route('/api/relevantDocuments', methods=['POST'])
 def addRelevantDocument():
-	if 'file' not in request.files:
-		return "File not submitted", 400
+    if 'file' not in request.files:
+        return "File not submitted", 400
 
-	file = request.files['file']
+    file = request.files['file']
 
-	if Path(file.filename).suffix != '.txt':
-		return "Invalid file type", 400
-	
-	try:
-		upload_document(file)
-	except RuntimeError:
-		return "File not uploaded successfully", 500
-	
-	return 'File uploaded successfully!', 200
+    if Path(file.filename).suffix != '.txt':
+        return "Invalid file type", 400
+
+    try:
+        upload_document(file)
+    except RuntimeError:
+        return "File not uploaded successfully", 500
+
+    return 'File uploaded successfully!', 200
 
 @app.route('/api/statistics', methods=['GET'])
 def generateStatistics():

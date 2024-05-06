@@ -1,3 +1,8 @@
+ # inverted_index.py (python)
+ # Will Moss with a very little help from Benjamin Weeg
+ # Started 2024-04-??
+ # Last edited 2024-05-05 (yyyy mm dd)
+
 import os
 from abc import ABC, abstractmethod
 from collections import defaultdict
@@ -27,17 +32,17 @@ class AbstractInvertedIndex(ABC):
 
             for property, value in kwargs.items():
                 setattr(cls._instance, property, value)
-    
+
             cls._instance.loadDocuments()
         return cls._instance
-    
+
     def getTokens(self, data: str):
         assert type(data) is str
         processedTokens = [data]
         for process in self.preprocessPipeline:
             processedTokens = process(processedTokens)
         return processedTokens
-    
+
     def _getNextId(self):
         id = self.id
         self.id += 1
@@ -76,7 +81,7 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
             ],
             stopWords=stopwords.words('english')
         )
-            
+
     def loadDocument(self, path):
         document = SimpleDocument(path, id=self._getNextId())
         with open(path, 'r', encoding='utf-8') as file:
@@ -85,7 +90,7 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
             
             for token in tokens:
                 self.indexer[token].append(document)
-    
+
     def handleQuery(self, query: str) -> List[AbstractDocument]:
         queryWords = query.split()
         postings = [self.indexer[queryWord] for queryWord in queryWords if queryWord not in self.stopWords]
@@ -105,7 +110,7 @@ class InvertedIndexWithStats(AbstractInvertedIndex):
             termFrequency={},
             id=1
         )
-    
+
     def loadDocument(self, path):
         with open(path, 'r', encoding='utf-8') as file:
             data = file.read()
@@ -113,18 +118,16 @@ class InvertedIndexWithStats(AbstractInvertedIndex):
                                         path=path, data=data)
             self.documents.append(document)
             tokens = self.getTokens(data)
-            
             for token in tokens:
                 self.indexer[token].append(document)
                 self.termFrequency[token] = self.termFrequency.get(token, 0) + 1
-                
 
     def handleQuery(self, query: str) -> List[AbstractDocument]:
         queryWords = query.split()
         postings = [self.indexer[queryWord] for queryWord in queryWords if queryWord not in self.stopWords]
         commonDocuments = list(set.intersection(*map(set,postings))) if len(postings) > 0 else []
         return commonDocuments
-    
+
     def generateStatistics(self) -> dict:
         statistics = {}
 
@@ -142,7 +145,7 @@ class InvertedIndexWithStats(AbstractInvertedIndex):
 
         # Report the total number of words encountered
         statistics['Total number of words encountered'] = sum(self.termFrequency.values())
-        
+
         # Report the term frequency of each word and the document IDs where 
         # the word occurs (Output the posting list for a term).
         statistics['Term stats'] = {}
@@ -151,14 +154,14 @@ class InvertedIndexWithStats(AbstractInvertedIndex):
             termStatistics['Term frequency'] = self.termFrequency[term]
             termStatistics['Document IDs'] = [doc.id for doc in posting]
             statistics['Term stats'][term] = termStatistics
-        
+
         # Report  the  top  100th,  500th,  and  1000th  most-frequent  
         # word  and  their  frequencies  of occurrence.
-        termsSortedByFreq = sorted(self.termFrequency.keys(), key=self.termFrequency.get, reverse=True)        
+        termsSortedByFreq = sorted(self.termFrequency.keys(), key=self.termFrequency.get, reverse=True)
         statistics['Top 100th word'] = termsSortedByFreq[99], self.termFrequency[termsSortedByFreq[99]]
         statistics['Top 500th word'] = termsSortedByFreq[499], self.termFrequency[termsSortedByFreq[499]]
         statistics['Top 1000th word'] = termsSortedByFreq[999], self.termFrequency[termsSortedByFreq[999]]
-        
+
         # Create postings and assign a term frequency to every document 
         # in the postings list
         # TODO: Figure out what this means

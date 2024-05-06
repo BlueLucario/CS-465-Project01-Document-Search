@@ -3,7 +3,6 @@ import TextField from '@mui/material/TextField';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { AlertColor } from '@mui/material';
 
-
 export default function UploadIcon(props: { showSnackbar: (severity: AlertColor, message: string) => void; }) {
 
     function uploadFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -32,12 +31,12 @@ export default function UploadIcon(props: { showSnackbar: (severity: AlertColor,
         }
     }
 
-	return (
-		<>
-			<Button component="label" startIcon={<CloudUploadIcon />}>
-				Upload file
-				<TextField type="file" style={{ display: 'none' }} inputProps={{accept:".txt"}} onChange={uploadFile} />
-			</Button>
-		</>
-	);
+    return (
+        <>
+            <Button component="label" startIcon={<CloudUploadIcon />}>
+                Upload file
+                <TextField type="file" style={{ display: 'none' }} inputProps={{accept:".txt"}} onChange={uploadFile} />
+            </Button>
+        </>
+    );
 }

@@ -1,3 +1,8 @@
+// DownloadStats.tsx
+// Mostly Will Moss with a little help from Benjamin Weeg
+// Started 
+// Last edited 2024-05-05 (yyyy mm dd)
+
 import Button from '@mui/material/Button';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
@@ -6,16 +11,16 @@ import Modal from '@mui/material/Modal';
 import { AlertColor } from '@mui/material';
 
 const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  maxWidth: '80vw',
-  maxHeight: '80vh',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    maxWidth: '80vw',
+    maxHeight: '80vh',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
 };
 
 interface StatSummary {
@@ -57,8 +62,8 @@ export default function DownloadStats(props: { showSnackbar: (severity: AlertCol
     }
 
     function showStatistics() {
-		fetch(`/api/statistics`)
-				.then(res => {
+        fetch(`/api/statistics`)
+                .then(res => {
                     if (!res.ok) {
                         const error = new Error(res.statusText);
                         console.log(error);
@@ -66,10 +71,9 @@ export default function DownloadStats(props: { showSnackbar: (severity: AlertCol
                         error.status = res.status;
                         throw error;
                     }
-
                     return res.json()
                 })
-				.then(data => {setStatistics(data); setStatSummary(data);})
+                .then(data => {setStatistics(data); setStatSummary(data);})
                 .then(() => setOpen(true))
                 .catch((err) => {
                     err.response.text().then((data: string) => {
@@ -78,13 +82,12 @@ export default function DownloadStats(props: { showSnackbar: (severity: AlertCol
                         props.showSnackbar(severity, message);
                     })
                 })
-	}
+    }
 
     function downloadStatistics() {
         downloadFile(JSON.stringify(statistics, null, 2), "stats.json", "text/json");
     }
 
-    
     return (
         <>
         <Button onClick={showStatistics}>Show statistics</Button>
