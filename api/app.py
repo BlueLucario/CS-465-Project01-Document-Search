@@ -8,6 +8,8 @@ from pathlib import Path
 
 app = Flask(__name__)
 
+handle_query("") # Loads inverted index on startup
+
 @app.route('/api/relevantDocuments/<query>', methods=['GET'])
 def getRelevantDocuments(query):
 	relevantDocs = handle_query(escape(query))
