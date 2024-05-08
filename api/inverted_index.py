@@ -235,6 +235,81 @@ class FlexibleInvertedIndexWithStats(AbstractInvertedIndex):
         # TODO: Figure out what this means
         return statistics
 
+class SoundexInvertedIndex(AbstractInvertedIndex):
+    @classmethod
+    def getInstance(cls, documentPath='./documents'):
+        return super().getInstance(
+            documentPath=documentPath, 
+            preprocessPipeline=[
+                Preprocess.splitByWhitespace,
+                Preprocess.splitBySpecialCharacter,
+                Preprocess.removeTokenWithNumber,
+                Preprocess.toLower,
+                Preprocess.removeEmptyString,
+                Preprocess.stringToSoundex,
+            ],
+            stopWords=stopwords.words('english'),
+            documents=[],
+            termFrequency={},
+            id=1
+        )
+
+    def loadDocument(self, path):
+        with open(path, 'r', encoding='utf-8') as file:
+            data = file.read()
+            document = FlexibleDocument(path, id=self._getNextId(), 
+                                        path=path, data=data)
+            self.documents.append(document)
+            tokens = self.getTokens(data)
+            for token in tokens:
+                self.indexer[token].append(document)
+                self.termFrequency[token] = self.termFrequency.get(token, 0) + 1
+
+    def handleQuery(self, query: str) -> List[AbstractDocument]:
+        queryWords = query.split()
+        postings = [self.indexer[queryWord] for queryWord in queryWords if queryWord not in self.stopWords]
+        commonDocuments = list(set.intersection(*map(set,postings))) if len(postings) > 0 else []
+        return commonDocuments
+
+    def generateStatistics(self) -> dict:
+        statistics = {}
+
+        # Report the number of distinct words observed in each document and
+        # the total number of words encountered
+        statistics['Document stats'] = {}
+        for document in self.documents:
+            documentStatistics = {}
+            documentStatistics['Number of distinct words'] = len(set(document.data.split()))
+            documentStatistics['Total number of words'] = len(document.data.split())
+            statistics['Document stats'][document.name] = documentStatistics
+
+        # Report the total number of distinct words encountered
+        statistics['Total number of distinct words'] = len(self.indexer)
+
+        # Report the total number of words encountered
+        statistics['Total number of words encountered'] = sum(self.termFrequency.values())
+
+        # Report the term frequency of each word and the document IDs where 
+        # the word occurs (Output the posting list for a term).
+        statistics['Term stats'] = {}
+        for term, posting in self.indexer.items():
+            termStatistics = {}
+            termStatistics['Term frequency'] = self.termFrequency[term]
+            termStatistics['Document IDs'] = [doc.id for doc in posting]
+            statistics['Term stats'][term] = termStatistics
+
+        # Report  the  top  100th,  500th,  and  1000th  most-frequent  
+        # word  and  their  frequencies  of occurrence.
+        termsSortedByFreq = sorted(self.termFrequency.keys(), key=self.termFrequency.get, reverse=True)
+        statistics['Top 100th word'] = termsSortedByFreq[99], self.termFrequency[termsSortedByFreq[99]]
+        statistics['Top 500th word'] = termsSortedByFreq[499], self.termFrequency[termsSortedByFreq[499]]
+        statistics['Top 1000th word'] = termsSortedByFreq[999], self.termFrequency[termsSortedByFreq[999]]
+
+        # Create postings and assign a term frequency to every document 
+        # in the postings list
+        # TODO: Figure out what this means
+        return statistics
+
 
 def getInvertedIndex() -> AbstractInvertedIndex:
     return FlexibleInvertedIndexWithStats.getInstance(preprocessPipeline=[
@@ -243,6 +318,7 @@ def getInvertedIndex() -> AbstractInvertedIndex:
         Preprocess.removeTokenWithNumber,
         Preprocess.toLower,
         Preprocess.removeEmptyString,
+        Preprocess.removeStopwords,
     ])
 
 if __name__ == '__main__':
