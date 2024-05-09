@@ -1,8 +1,3 @@
-// DownloadStats.tsx
-// Mostly Will Moss with a little help from Benjamin Weeg
-// Started 
-// Last edited 2024-05-05 (yyyy mm dd)
-
 import Button from '@mui/material/Button';
 import { useState } from 'react';
 import Box from '@mui/material/Box';

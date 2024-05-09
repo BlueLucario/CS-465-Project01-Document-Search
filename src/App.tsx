@@ -1,8 +1,3 @@
-// App.tsx (typescriptreact)
-// Will Moss with small touches from Benjamin Weeg
-// Started 2024-05-05
-// Last edited 2024-05-05 (yyyy mm dd)
-
 import './App.css'
 import './QueryTile'
 import QueryTile from './QueryTile'
