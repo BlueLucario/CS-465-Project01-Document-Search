@@ -1,10 +1,5 @@
- # .gitignore (gitignore)
- # Will Moss & Benjamin Weeg
- # Started 
- # Last edited 2024-05-05 (yyyy mm dd)
-
- .vs
- .vscode/
+.vs
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
