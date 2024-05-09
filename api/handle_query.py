@@ -1,8 +1,3 @@
- # handle_query.py (python)
- # Will Moss without help from Benjamin Weeg
- # Started 
- # Last edited 2024-05-05 (yyyy mm dd)
-
 from typing import List
 from inverted_index import getInvertedIndex
 from document import AbstractDocument

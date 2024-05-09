@@ -1,8 +1,3 @@
- # preprocess.py (python)
- # Will Moss with some help from Benjamin Weeg
- # Started 
- # Last edited 2024-05-05 (yyyy mm dd)
-
 from typing import List
 
 class Preprocess:

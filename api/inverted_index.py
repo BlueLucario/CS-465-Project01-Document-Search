@@ -1,8 +1,3 @@
- # inverted_index.py (python)
- # Will Moss with a very little help from Benjamin Weeg
- # Started 2024-04-??
- # Last edited 2024-05-05 (yyyy mm dd)
-
 import os
 from abc import ABC, abstractmethod
 from collections import defaultdict
