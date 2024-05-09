@@ -96,7 +96,7 @@ index will view them as separate documents.
 
 ## Implementation Details
 
-- All inverted indexes extend the AbstractInvertedIndex for a consistent interface. 
+- All inverted indexes extend the SimpleInvertedIndex for a consistent interface. 
 
 - The dictionary (i.e terms) is implemented with a dictionary (i.e HashMap) 
 with the term as its key and the posting as its value. This ensures that lookup 
