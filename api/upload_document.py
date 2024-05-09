@@ -2,7 +2,6 @@ from inverted_index import getInvertedIndex
 import shutil
 import os
 
-# TODO: Give working directory a more informative name
 def upload_document(file, workingDirectory='./temp'):
     print('Saving file locally...')
     if not os.path.exists(workingDirectory):

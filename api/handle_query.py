@@ -7,12 +7,6 @@ def handle_query(query: str) -> List[AbstractDocument]:
     return invertedIndex.handleQuery(query)
 
 if __name__ == '__main__':
-    '''
-    1. Create the inverted index
-    2. Receive the query
-    3. Retrieve appropriate documents
-    4. Return document names
-    '''
     while True:
         query = input('Enter query: ')
 

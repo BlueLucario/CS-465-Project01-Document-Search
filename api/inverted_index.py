@@ -158,9 +158,6 @@ class InvertedIndexWithStats(AbstractInvertedIndex):
         statistics['Top 500th word'] = termsSortedByFreq[499], self.termFrequency[termsSortedByFreq[499]]
         statistics['Top 1000th word'] = termsSortedByFreq[999], self.termFrequency[termsSortedByFreq[999]]
 
-        # Create postings and assign a term frequency to every document 
-        # in the postings list
-        # TODO: Figure out what this means
         return statistics
 
 class FlexibleInvertedIndexWithStats(AbstractInvertedIndex):
@@ -226,9 +223,6 @@ class FlexibleInvertedIndexWithStats(AbstractInvertedIndex):
         statistics['Top 500th word'] = termsSortedByFreq[499], self.termFrequency[termsSortedByFreq[499]]
         statistics['Top 1000th word'] = termsSortedByFreq[999], self.termFrequency[termsSortedByFreq[999]]
 
-        # Create postings and assign a term frequency to every document 
-        # in the postings list
-        # TODO: Figure out what this means
         return statistics
 
 class SoundexInvertedIndex(AbstractInvertedIndex):
@@ -301,9 +295,6 @@ class SoundexInvertedIndex(AbstractInvertedIndex):
         statistics['Top 500th word'] = termsSortedByFreq[499], self.termFrequency[termsSortedByFreq[499]]
         statistics['Top 1000th word'] = termsSortedByFreq[999], self.termFrequency[termsSortedByFreq[999]]
 
-        # Create postings and assign a term frequency to every document 
-        # in the postings list
-        # TODO: Figure out what this means
         return statistics
 
 
