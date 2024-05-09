@@ -66,7 +66,7 @@ if desired. We recommend reading the JSON on an online viewer like
 notification popup.
 
 - The content of the returned documents can be viewed by clicking the document name
-(most likely a file path).
+(i.e the file path).
 
 The project has the following limitations:
 
@@ -80,3 +80,33 @@ unspecified behavior and will likely lead to poor results.
 - **Duplicate documents are allowed.** If a document is uploaded twice, the inverted
 index will view them as separate documents.
 
+- **Documents cannot be deleted once uploaded.** 
+
+- **Server errors (500) are poorly formatted.** There is no logic to prettify server
+errors.
+
+## Implementation Details
+
+- All inverted indexes extend the AbstractInvertedIndex for a consistent interface. 
+
+- The dictionary (i.e terms) is implemented with a dictionary (i.e HashMap) 
+with the term as its key and the posting as its value. This ensures that lookup 
+is O(1) time complexity without the need for sorting. The posting is a list of
+Document objects. The Document objects are appended sequentially, so the posting
+list is always sorted by id.
+
+- The inverted index follows the singleton pattern. This means that only 1
+inverted index is ever built and used.
+
+- The statistics is lazily generated upon request. 
+
+- The algorithms for tokenization is contained in the Preprocess class. All algorithms
+take a list of tokens as its input and returns a new list of tokens. For example, 
+the `removeTokenWithNumber` function takes a list of tokens and only returns those
+without a number. This allows for quick and clear modifications to the tokenization
+design. 
+
+- A Dockerfile is made for the Flask backend server ensure a consistent runtime
+environment. This decision was made after frequent bugs made collaboration difficult.
+A Dockerfile was not made for the React backend server because of the simplicity 
+and wide-adoption of npm. 
