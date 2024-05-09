@@ -13,7 +13,7 @@ handle_query("") # Loads inverted index on startup
 
 @app.route('/api/relevantDocuments/<query>', methods=['GET'])
 def getRelevantDocuments(query):
-    relevantDocs = handle_query(escape(query))
+    relevantDocs = handle_query(str(escape(query)))
     return json.dumps(relevantDocs, default=lambda x:vars(x))
 
 @app.route('/api/relevantDocuments', methods=['POST'])
@@ -43,7 +43,7 @@ def generateStatistics():
 @app.route('/api/documentContent/<id>', methods=['GET'])
 def getDocumentContent(id):
     try:
-        documentContent = get_document_content(escape(id))
+        documentContent = get_document_content(str(escape(id)))
         return json.dumps(documentContent)
     except RuntimeError:
         return f"Unable to retrieve the content of document {id}", 500

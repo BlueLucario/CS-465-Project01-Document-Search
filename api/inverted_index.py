@@ -64,7 +64,7 @@ class SimpleInvertedIndex():
 
     def handleQuery(self, query: str) -> List[AbstractDocument]:
         queryWords = self.getTokens(query)
-        postings = [self.indexer[queryWord] for queryWord in queryWords]
+        postings = [self.indexer[queryWord] for queryWord in queryWords if queryWord in self.indexer]
         commonDocuments = list(set.intersection(*map(set,postings))) if len(postings) > 0 else []
         return commonDocuments
     
