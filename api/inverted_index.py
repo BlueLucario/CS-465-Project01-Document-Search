@@ -73,6 +73,7 @@ class SimpleInvertedIndex(AbstractInvertedIndex):
                 Preprocess.removeEmptyString,
                 Preprocess.removeStopwords,
                 Preprocess.removeEmptyString,
+                Preprocess.stringToSoundex,
             ],
             stopWords=stopwords.words('english')
         )
@@ -314,6 +315,7 @@ def getInvertedIndex() -> AbstractInvertedIndex:
         Preprocess.toLower,
         Preprocess.removeEmptyString,
         Preprocess.removeStopwords,
+        #Preprocess.stringToSoundex,
     ])
 
 if __name__ == '__main__':

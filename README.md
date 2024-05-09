@@ -1,9 +1,18 @@
 # CS 465 Project01 Document Search
 **Authors:** William Moss and Benjamin Weeg
 
-## Overview
 
-[Overview]
+## Overview
+A simple Information Retrieval (IR) system for document collection processing.
+
+Text Processing:
+We use a searies of tokenization and normalization steps, 
+removing digits and punctuation to streamline text analysis.
+
+Statistics: 
+Generated statistics on word frequency and document occurrence.
+A preview shows some highlights and the full raw data is avalable for download.
+
 
 ## Running the project
 
@@ -13,12 +22,12 @@ This tutorial assumes that you are in the project home directory (i.e the same f
 
 To build the project:
 
-1) Build the Flask backend server with `cd api && docker build -t searchengine-api-image .`
+1) Build the Flask backend server with `npm run build-api` or `cd api && docker build -t searchengine-api-image .`
 2) Build the React frontend server with `npm install`
 
 To run the project:
 
-2) Run the Flask backend server with `cd api && docker run -dp 5000:5000 --name searchengine-api searchengine-api-image`
+2) Run the Flask backend server with `npm run start-api` or `cd api && docker run -dp 5000:5000 --name searchengine-api searchengine-api-image`
 3) Start the React frontend server with `npm run dev`
 4) Open the website at the designited link. 
 
@@ -33,6 +42,7 @@ the background and waste resources.
 
 **TIP:** Docker Desktop is a useful tool for fixing any bugs with running or 
 stopping the Flask backend server.
+
 
 ## Features and Limitations
 
