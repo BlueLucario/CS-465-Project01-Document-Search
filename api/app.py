@@ -1,3 +1,8 @@
+ # app.py (python)
+ # Will Moss & Benjamin Weeg
+ # Started 
+ # Last edited 2024-05-09 (yyyy mm dd)
+
 from handle_query import handle_query
 from upload_document import upload_document
 from generate_statistics import generate_statistics

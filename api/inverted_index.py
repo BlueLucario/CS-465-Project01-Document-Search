@@ -1,3 +1,8 @@
+ # inverted_index.py (python)
+ # Will Moss & Benjamin Weeg (Group 1)
+ # Started: 
+ # Last edited: 2024-05-09 (yyyy mm dd)
+
 import os
 from collections import defaultdict
 from document import AbstractDocument, FlexibleDocument
@@ -142,6 +147,7 @@ def getInvertedIndex() -> SimpleInvertedIndex:
         Preprocess.removeStopwords,
         #Preprocess.stringToSoundex,
     ])
+
 
 if __name__ == '__main__':
     invertedIndex = getInvertedIndex()

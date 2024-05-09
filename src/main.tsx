@@ -1,3 +1,8 @@
+// main.tsx (typescriptreact)
+// Will Moss & Benjamin Weeg (Group 1)
+// Started: 
+// Last edited: 2024-05-09 (yyyy mm dd)
+
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'

@@ -1,3 +1,8 @@
+// vite.config.ts (typescript)
+// Will Moss & Benjamin Weeg (Group 1)
+// Started: 
+// Last edited: 2024-05-09 (yyyy mm dd)
+
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
