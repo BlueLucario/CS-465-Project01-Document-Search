@@ -1,6 +1,7 @@
 from handle_query import handle_query
 from upload_document import upload_document
 from generate_statistics import generate_statistics
+from get_document_content import get_document_content
 from flask import Flask, request
 from markupsafe import escape
 import json
@@ -13,7 +14,7 @@ handle_query("") # Loads inverted index on startup
 @app.route('/api/relevantDocuments/<query>', methods=['GET'])
 def getRelevantDocuments(query):
     relevantDocs = handle_query(escape(query))
-    return json.dumps(relevantDocs, default=lambda x:str(x))
+    return json.dumps(relevantDocs, default=lambda x:vars(x))
 
 @app.route('/api/relevantDocuments', methods=['POST'])
 def addRelevantDocument():
@@ -35,6 +36,11 @@ def addRelevantDocument():
 @app.route('/api/statistics', methods=['GET'])
 def generateStatistics():
     return json.dumps(generate_statistics())
+
+@app.route('/api/documentContent/<id>', methods=['GET'])
+def getDocumentContent(id):
+    documentContent = get_document_content(escape(id))
+    return json.dumps(documentContent)
 
 if __name__ == "__main__":
     app.run(debug=True)

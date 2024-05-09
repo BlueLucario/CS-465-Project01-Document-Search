@@ -22,14 +22,15 @@ This tutorial assumes that you are in the project home directory (i.e the same f
 
 To build the project:
 
-1) Build the Flask backend server with `npm run build-api` or `cd api && docker build -t searchengine-api-image .`
-2) Build the React frontend server with `npm install`
+1) Build the React frontend server with `npm install`
+2) Build the Flask backend server with `npm run build-api` or `cd api && docker build -t searchengine-api-image .`
 
 To run the project:
 
-2) Run the Flask backend server with `npm run start-api` or `cd api && docker run -dp 5000:5000 --name searchengine-api searchengine-api-image`
-3) Start the React frontend server with `npm run dev`
-4) Open the website at the designited link. 
+1) Run the Flask backend server with `npm run start-api` or `cd api && docker run -dp 5000:5000 --name searchengine-api searchengine-api-image`
+2) Start the React frontend server with `npm run dev`
+3) Open the website at the designited link.	 
+            (It will likely be `localhost:5173`.)
 
 To stop the project:
 
@@ -38,7 +39,8 @@ To stop the project:
 **NOTE:** Do not use `Ctrl+Z` or else the server will continue to run in 
 the background and waste resources.
 
-2) Stop the Flask backend server with `cd api && docker stop searchengine-api`.
+2) Stop the Flask backend server with `npm run stop-api` or `cd api && docker stop searchengine-api && docker container prune`
+            (Type Y at the prompt.)
 
 **TIP:** Docker Desktop is a useful tool for fixing any bugs with running or 
 stopping the Flask backend server.
@@ -75,6 +77,9 @@ if desired. We recommend reading the JSON on an online viewer like
 - All errors and some success responses will be shown in the bottom left 
 notification popup.
 
+- The content of the returned documents can be viewed by clicking the document name
+(i.e the file path).
+
 The project has the following limitations:
 
 - **All processed documents must be text files.** Invalid file types submitted 
@@ -84,10 +89,36 @@ unspecified behavior and will likely lead to poor results.
 
 - **There is no ranked retrieval.** The documents either match the query or don't.
 
-- **There is no document summary**. The documents are named by their file path. 
-The user must manually open the document from the `api/documents/` folder to 
-confirm its relevance.
-
 - **Duplicate documents are allowed.** If a document is uploaded twice, the inverted
 index will view them as separate documents.
 
+- **Documents cannot be deleted once uploaded.** 
+
+- **Server errors (500) are poorly formatted.** There is no logic to prettify server
+errors.
+
+## Implementation Details
+
+- All inverted indexes extend the AbstractInvertedIndex for a consistent interface. 
+
+- The dictionary (i.e terms) is implemented with a dictionary (i.e HashMap) 
+with the term as its key and the posting as its value. This ensures that lookup 
+is O(1) time complexity without the need for sorting. The posting is a list of
+Document objects. The Document objects are appended sequentially, so the posting
+list is always sorted by id.
+
+- The inverted index follows the singleton pattern. This means that only 1
+inverted index is ever built and used.
+
+- The statistics is lazily generated upon request. 
+
+- The algorithms for tokenization is contained in the Preprocess class. All algorithms
+take a list of tokens as its input and returns a new list of tokens. For example, 
+the `removeTokenWithNumber` function takes a list of tokens and only returns those
+without a number. This allows for quick and clear modifications to the tokenization
+design. 
+
+- A Dockerfile is made for the Flask backend server ensure a consistent runtime
+environment. This decision was made after frequent bugs made collaboration difficult.
+A Dockerfile was not made for the React backend server because of the simplicity 
+and wide-adoption of npm. 
