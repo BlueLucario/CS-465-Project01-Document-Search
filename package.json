@@ -6,9 +6,9 @@
     "type": "module",
   "scripts": {
     "dev": "vite",
-    "start-api": "cd api && docker run -dp 5000:5000 --name searchengine-api searchengine-api-image",
-    "build-api": "cd api && docker build -t searchengine-api-image .",
-    "stop-api": "cd api && docker stop searchengine-api && docker container prune",
+    "start-api": "cd api && docker run -dp 5000:5000 --name searchengine-api searchengine-api-image && cd ..",
+    "build-api": "cd api && docker build -t searchengine-api-image . && cd ..",
+    "stop-api": "cd api && docker stop searchengine-api && docker container prune && cd ..",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"

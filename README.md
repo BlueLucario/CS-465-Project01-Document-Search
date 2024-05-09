@@ -23,11 +23,11 @@ This tutorial assumes that you are in the project home directory (i.e the same f
 To build the project:
 
 1) Build the React frontend server with `npm install`
-2) Build the Flask backend server with `npm run build-api` or `cd api && docker build -t searchengine-api-image .`
+2) Build the Flask backend server with `npm run build-api` or `cd api && docker build -t searchengine-api-image . && cd ..`
 
 To run the project:
 
-1) Run the Flask backend server with `npm run start-api` or `cd api && docker run -dp 5000:5000 --name searchengine-api searchengine-api-image`
+1) Run the Flask backend server with `npm run start-api` or `cd api && docker run -dp 5000:5000 --name searchengine-api searchengine-api-image && cd ..`
 2) Start the React frontend server with `npm run dev`
 3) Open the website at the designited link.	 
             (It will likely be `localhost:5173`.)
@@ -39,7 +39,7 @@ To stop the project:
 **NOTE:** Do not use `Ctrl+Z` or else the server will continue to run in 
 the background and waste resources.
 
-2) Stop the Flask backend server with `npm run stop-api` or `cd api && docker stop searchengine-api && docker container prune`
+2) Stop the Flask backend server with `npm run stop-api` or `cd api && docker stop searchengine-api && docker container prune && cd ..`
             (Type Y at the prompt.)
 
 **TIP:** Docker Desktop is a useful tool for fixing any bugs with running or 
