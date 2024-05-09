@@ -6,12 +6,12 @@
 A simple Information Retrieval (IR) system for document collection processing.
 
 Text Processing:
-We use a searies of tokenization and normalization steps, 
-removing digits and punctuation to streamline text analysis.
+We use a series of tokenization and normalization steps, 
+removing digits and special characters to streamline text analysis.
 
 Statistics: 
 Generated statistics on word frequency and document occurrence.
-A preview shows some highlights and the full raw data is avalable for download.
+The preview shows some key metrics and the full raw data is available for download.
 
 
 ## Running the project
@@ -29,8 +29,7 @@ To run the project:
 
 1) Run the Flask backend server with `npm run start-api` or `cd api && docker run -dp 5000:5000 --name searchengine-api searchengine-api-image && cd ..`
 2) Start the React frontend server with `npm run dev`
-3) Open the website at the designited link.	 
-            (It will likely be `localhost:5173`.)
+3) Open the website at the designated link (likely `localhost:5173`).
 
 To stop the project:
 
@@ -39,11 +38,9 @@ To stop the project:
 **NOTE:** Do not use `Ctrl+Z` or else the server will continue to run in 
 the background and waste resources.
 
-2) Stop the Flask backend server with `npm run stop-api` or `cd api && docker stop searchengine-api && docker container prune && cd ..`
-            (Type Y at the prompt.)
+2) Stop the Flask backend server with `npm run stop-api` or `cd api && docker stop searchengine-api && docker container prune && cd ..`. Type Y at the prompt.
 
-**TIP:** Docker Desktop is a useful tool for fixing any bugs with running or 
-stopping the Flask backend server.
+**TIP:** Docker Desktop is a useful tool for fixing any bugs with running or stopping the Flask backend server manually.
 
 
 ## Features and Limitations
@@ -71,10 +68,10 @@ error if the inverted index is not yet built.**
 
 - The statistics summary can be viewed from the `Show Statistics` button at the 
 bottom right of the frontend website. The full statistics JSON can be downloaded 
-if desired. We recommend reading the JSON on an online viewer like 
+if desired. We recommend reading the JSON with an online viewer like 
 [this](https://jsonviewer.stack.hu/).
 
-- All errors and some success responses will be shown in the bottom left 
+- All errors and certain success responses will be shown in the bottom left 
 notification popup.
 
 - The content of the returned documents can be viewed by clicking the document name
@@ -96,6 +93,7 @@ index will view them as separate documents.
 
 - **Server errors (500) are poorly formatted.** There is no logic to prettify server
 errors.
+
 
 ## Implementation Details
 
@@ -122,3 +120,12 @@ design.
 environment. This decision was made after frequent bugs made collaboration difficult.
 A Dockerfile was not made for the React backend server because of the simplicity 
 and wide-adoption of npm. 
+
+
+## Extra Credit
+
+- **Document can be added to the inverted index during runtime.** This is done via the upload button. Remember that the document must be a text file.
+
+- **A soundex inverted index is available for use.** To use the soundex inverted index, go to `getInvertedIndex()` at `api/inverted_index.py` and replace the inverted index with `SoundexInvertedIndex` with the same parameters. Remember to rebuild the project by following the above instructions. 
+
+- **The contents of the retrieved documents can be viewed in the browser.** This is done by clicking the document name (i.e the filepath). A popup will appear with the document's contents. 
