@@ -1,3 +1,8 @@
+// QueryTile.tsx (typescriptreact)
+// Will Moss & Benjamin Weeg (Group 1)
+// Started: 
+// Last edited: 2024-05-09 (yyyy mm dd)
+
 import TextField from '@mui/material/TextField';
 import { useState } from 'react';
 import SendIcon from '@mui/icons-material/Send';

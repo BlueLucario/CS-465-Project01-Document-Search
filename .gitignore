@@ -1,9 +1,11 @@
  # .gitignore (gitignore)
- # Will Moss & Benjamin Weeg
- # Started 
- # Last edited 2024-05-05 (yyyy mm dd)
+ # Will Moss & Benjamin Weeg (Group 1)
+ # Started: 
+ # Last edited: 2024-05-09 (yyyy mm dd)
 
- .vs
+
+
+ .vs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

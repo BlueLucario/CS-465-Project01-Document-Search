@@ -1,7 +1,7 @@
  # inverted_index.py (python)
- # Will Moss with minor help from Benjamin Weeg
- # Started 
- # Last edited 2024-05-09 (yyyy mm dd)
+ # Will Moss & Benjamin Weeg (Group 1)
+ # Started: 
+ # Last edited: 2024-05-09 (yyyy mm dd)
 
 import os
 from abc import ABC, abstractmethod
@@ -310,7 +310,6 @@ class SoundexInvertedIndex(AbstractInvertedIndex):
         # in the postings list
         # TODO: Figure out what this means
         return statistics
-
 
 
 def getInvertedIndex() -> AbstractInvertedIndex:
