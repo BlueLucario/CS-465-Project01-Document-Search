@@ -13,14 +13,14 @@ This tutorial assumes that you are in the project home directory (i.e the same f
 
 To build the project:
 
-1) Build the Flask backend server with `cd api && docker build -t searchengine-api-image .`
-2) Build the React frontend server with `npm install`
+1) Build the React frontend server with `npm install`
+2) Build the Flask backend server with `cd api && docker build -t searchengine-api-image .`
 
 To run the project:
 
-2) Run the Flask backend server with `cd api && docker run -dp 5000:5000 --name searchengine-api searchengine-api-image`
-3) Start the React frontend server with `npm run dev`
-4) Open the website at the designited link. 
+1) Start the React frontend server with `npm run dev`
+2) Open the website at the designited link. It will likely be `localhost:5173`.
+3) Run the Flask backend server with `cd api && docker run -dp 5000:5000 --name searchengine-api searchengine-api-image`
 
 To stop the project:
 
@@ -29,7 +29,7 @@ To stop the project:
 **NOTE:** Do not use `Ctrl+Z` or else the server will continue to run in 
 the background and waste resources.
 
-2) Stop the Flask backend server with `cd api && docker stop searchengine-api`.
+2) Stop the Flask backend server with `cd api && docker stop searchengine-api && docker container prune`. Type Y at the prompt.
 
 **TIP:** Docker Desktop is a useful tool for fixing any bugs with running or 
 stopping the Flask backend server.
@@ -65,6 +65,9 @@ if desired. We recommend reading the JSON on an online viewer like
 - All errors and some success responses will be shown in the bottom left 
 notification popup.
 
+- The content of the returned documents can be viewed by clicking the document name
+(most likely a file path).
+
 The project has the following limitations:
 
 - **All processed documents must be text files.** Invalid file types submitted 
@@ -73,10 +76,6 @@ safety feature by uploading invalid documents directly to the folder. This is
 unspecified behavior and will likely lead to poor results.
 
 - **There is no ranked retrieval.** The documents either match the query or don't.
-
-- **There is no document summary**. The documents are named by their file path. 
-The user must manually open the document from the `api/documents/` folder to 
-confirm its relevance.
 
 - **Duplicate documents are allowed.** If a document is uploaded twice, the inverted
 index will view them as separate documents.
