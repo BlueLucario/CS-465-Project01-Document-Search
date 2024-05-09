@@ -7,11 +7,17 @@
 
 ## Running the project
 
-**Requirements:** Ensure that Docker, npm, and vite are all installed before running the project. 
+**Requirements:** Ensure that Docker and npm are installed before running the project. 
+
+This tutorial assumes that you are in the project home directory (i.e the same folder as this README).
+
+To build the project:
+
+1) Build the Flask backend server with `cd api && docker build -t searchengine-api-image .`
+2) Build the React frontend server with `npm install`
 
 To run the project:
 
-1) Build the Flask backend server with `cd api && docker build -t searchengine-api-image .`
 2) Run the Flask backend server with `cd api && docker run -dp 5000:5000 --name searchengine-api searchengine-api-image`
 3) Start the React frontend server with `npm run dev`
 4) Open the website at the designited link. 
