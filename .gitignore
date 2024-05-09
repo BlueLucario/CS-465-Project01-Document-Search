@@ -4,6 +4,7 @@
  # Last edited 2024-05-05 (yyyy mm dd)
 
  .vs
+ .vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

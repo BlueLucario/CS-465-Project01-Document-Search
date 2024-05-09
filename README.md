@@ -52,7 +52,7 @@ is handled as `X AND Y AND Z`.
 
 - Queries and documents are tokenized in the same manner. The current 
 inverted index splits terms by any non-alphabetic character (including numbers). 
-The inverted index also removes any stopwords and is case-insensitive.
+The inverted index also removes automatically stop words and is case-insensitive.
 
 - The inverted index is modular. You can change between inverted indexes in the 
 `getInvertedIndex()` function in `api/inverted_index.py`.  
@@ -91,8 +91,7 @@ index will view them as separate documents.
 
 - **Documents cannot be deleted once uploaded.** 
 
-- **Server errors (500) are poorly formatted.** There is no logic to prettify server
-errors.
+- **Server errors (500) are poorly formatted if server is offline.** 
 
 
 ## Implementation Details

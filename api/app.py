@@ -35,12 +35,18 @@ def addRelevantDocument():
 
 @app.route('/api/statistics', methods=['GET'])
 def generateStatistics():
-    return json.dumps(generate_statistics())
+    try:
+        return json.dumps(generate_statistics())
+    except RuntimeError:
+        return "Statistics not generated successfully", 500
 
 @app.route('/api/documentContent/<id>', methods=['GET'])
 def getDocumentContent(id):
-    documentContent = get_document_content(escape(id))
-    return json.dumps(documentContent)
+    try:
+        documentContent = get_document_content(escape(id))
+        return json.dumps(documentContent)
+    except RuntimeError:
+        return f"Unable to retrieve the content of document {id}", 500
 
 if __name__ == "__main__":
     app.run(debug=True)
