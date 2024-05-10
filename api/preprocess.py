@@ -45,7 +45,7 @@ class Preprocess:
         for token in tokens:
             #Pop first letter for later
             token = token.upper()
-            firstLet, token = token[0], token[1:]
+            firstLet= token[0]
             
             #Get number values
             numCode = ""
@@ -73,6 +73,12 @@ class Preprocess:
                 else:
                     i +=1
             
+            # If first letter's code == leading digit, remove leading digit
+            numCode = numCode[1:]
+
+            # Remove all '0's
+            numCode = numCode.strip("0")
+
             # Add trailing 0s if necessary
             soundexCode = (firstLet + numCode).ljust(4, '0')
             
