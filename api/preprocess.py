@@ -43,10 +43,10 @@ class Preprocess:
     def stringToSoundex(cls, tokens: List[str]):
         processedTokens = []
         for token in tokens:
-            #Pop first letter for later
             token = token.upper()
-            firstLet= token[0]
-            
+            #Copy first letter for later
+            firstLet = token[0]
+
             #Get number values
             numCode = ""
             for let in token:
@@ -64,24 +64,23 @@ class Preprocess:
                     numCode += '5'
                 elif let in 'R':
                     numCode += '6'
-                    
+
             # Remove adjacent duplicates
             i = 0
             while i < len(numCode)-1:
                 if numCode[i] == numCode[i+1]:
                     numCode = numCode[:i] + numCode[i+1:]
                 else:
-                    i +=1
-            
+                    i += 1
+  
             # If first letter's code == leading digit, remove leading digit
             numCode = numCode[1:]
 
             # Remove all '0's
-            numCode = numCode.strip("0")
+            numCode = numCode.replace("0", "")
 
-            # Add trailing 0s if necessary
+            # Replace first letter and add trailing 0s if necessary
             soundexCode = (firstLet + numCode).ljust(4, '0')
-            
             processedTokens.append(soundexCode[:4])
             
         return processedTokens
