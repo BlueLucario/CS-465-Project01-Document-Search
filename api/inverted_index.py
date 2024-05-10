@@ -4,7 +4,6 @@
  # Last edited: 2024-05-09 (yyyy mm dd)
 
 import os
-from collections import defaultdict
 from document import AbstractDocument, FlexibleDocument
 from typing import List
 from preprocess import Preprocess
@@ -25,7 +24,7 @@ class SimpleInvertedIndex():
             cls._instance = cls.__new__(cls)
             cls._instance.documentPath = './documents' # Likely overwritten by child class
             cls._instance.preprocessPipeline = defaultPipeline # Likely overwritten
-            cls._instance.indexer = defaultdict(list)
+            cls._instance.indexer = {}
             cls._instance.documents = []
             cls._instance.termFrequency = {}
             cls._instance.id = 0
@@ -63,14 +62,19 @@ class SimpleInvertedIndex():
             self.documents.append(document)
             tokens = self.getTokens(data)
             for token in tokens:
-                if document not in self.indexer[token]:
-                    self.indexer[token].append(document)
+                posting = self.indexer.get(token, [])
+                if document not in posting:
+                    posting.append(document)
+                    self.indexer[token] = posting
                 self.termFrequency[token] = self.termFrequency.get(token, 0) + 1
 
     def handleQuery(self, query: str) -> List[AbstractDocument]:
         queryWords = self.getTokens(query)
-        postings = [self.indexer[queryWord] for queryWord in queryWords if queryWord in self.indexer]
+        print(f'Query words: {queryWords}')
+        postings = [self.indexer.get(queryWord, []) for queryWord in queryWords]
+        print(f'Postings: {postings}')
         commonDocuments = list(set.intersection(*map(set,postings))) if len(postings) > 0 else []
+        print(f'Common documents: {commonDocuments}')
         return commonDocuments
     
     def generateStatistics(self) -> dict:
@@ -133,6 +137,7 @@ class SoundexInvertedIndex(SimpleInvertedIndex):
                 Preprocess.removeTokenWithNumber,
                 Preprocess.toLower,
                 Preprocess.removeEmptyString,
+                Preprocess.removeStopwords,
                 Preprocess.stringToSoundex,
             ],
         )

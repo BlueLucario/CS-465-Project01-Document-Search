@@ -28,7 +28,7 @@ You must build the project before running it. To build the project:
 To run the project:
 
 1) Run the Flask backend server with `npm run start-api` or `cd api && docker run -dp 5000:5000 --name searchengine-api searchengine-api-image && cd ..`
-2) Start the React frontend server with `npm run dev` or `vite`
+2) Start the React frontend server with `npm run dev`
 3) Open the website at the designated link (likely `localhost:5173`)
 
 To stop the project:

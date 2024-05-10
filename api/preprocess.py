@@ -47,7 +47,7 @@ class Preprocess:
             #Copy first letter for later
             firstLet = token[0]
 
-            #Get number values
+            #Get numerical value
             numCode = ""
             for let in token:
                 if let in 'AEHIOUWY':
@@ -72,13 +72,23 @@ class Preprocess:
                     numCode = numCode[:i] + numCode[i+1:]
                 else:
                     i += 1
-  
-            # If first letter's code == leading digit, remove leading digit
+                    
+            '''
+            We found that the "remove duplicates" rule also applies to the first
+            letter. For example, the word "rree" becomes R000 instead of R600. To
+            do this, we saved the first letter but kept it in the token to be converted
+            into the numCode. This ensures that all duplicates are removed, including
+            the first letter. This step removes the first letter numCode because of
+            that.
+            
+            Link to read more:
+            https://en.wikipedia.org/wiki/Soundex#:~:text=This%20rule%20also%20applies%20to%20the%20first%20letter.
+            '''
             numCode = numCode[1:]
-
+            
             # Remove all '0's
             numCode = numCode.replace("0", "")
-
+            
             # Replace first letter and add trailing 0s if necessary
             soundexCode = (firstLet + numCode).ljust(4, '0')
             processedTokens.append(soundexCode[:4])

@@ -26,6 +26,7 @@ const style = {
     p: 4,
 };
 
+const noDocumentsFound = [{"name": "No documents found"}]
 
 export default function QueryTile(props: { showSnackbar: (severity: AlertColor, message: string) => void; }) {
     const [relevantDocuments, setRelevantDocuments] = useState([]);
@@ -48,7 +49,7 @@ export default function QueryTile(props: { showSnackbar: (severity: AlertColor, 
                     }
                     return res.json()
                 })
-                .then(data => setRelevantDocuments((data.length == 0) ? ['No documents found'] : data))
+                .then(data => setRelevantDocuments((data.length == 0) ? noDocumentsFound : data))
                 .catch((err) => {
                     err.response.text().then((data: string) => {
                         const message = (data.trim() != '') ? `Error: ${data}` : `${err}`;
