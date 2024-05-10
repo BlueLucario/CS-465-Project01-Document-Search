@@ -1,3 +1,8 @@
+ # Dockerfile (dockerfile)
+ # Will Moss & Benjamin Weeg
+ # Started 
+ # Last edited 2024-05-09 (yyyy mm dd)
+
 # syntax=docker/dockerfile:1
 
 FROM python:rc-buster

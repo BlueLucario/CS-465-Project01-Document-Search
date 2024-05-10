@@ -1,3 +1,8 @@
+// UploadIcon.tsx (typescriptreact)
+// Will Moss & Benjamin Weeg (Group 1)
+// Started: 
+// Last edited: 2024-05-09 (yyyy mm dd)
+
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';

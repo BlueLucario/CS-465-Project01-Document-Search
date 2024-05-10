@@ -1,3 +1,8 @@
+ # document.py (python)
+ # Will Moss & Benjamin Weeg (Group 1)
+ # Started: 
+ # Last edited: 2024-05-09 (yyyy mm dd)
+
 from abc import ABC
 
 class AbstractDocument(ABC):
