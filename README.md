@@ -20,7 +20,7 @@ The preview shows some key metrics and the full raw data is available for downlo
 
 This tutorial assumes that you are in the project home directory (i.e the same folder as this README).
 
-To build the project:
+You must build the project before running it. To build the project:
 
 1) Build the React frontend server with `npm install`
 2) Build the Flask backend server with `npm run build-api` or `cd api && docker build -t searchengine-api-image . && cd ..`
@@ -28,8 +28,8 @@ To build the project:
 To run the project:
 
 1) Run the Flask backend server with `npm run start-api` or `cd api && docker run -dp 5000:5000 --name searchengine-api searchengine-api-image && cd ..`
-2) Start the React frontend server with `npm run dev`
-3) Open the website at the designated link (likely `localhost:5173`).
+2) Start the React frontend server with `npm run dev` or `vite`
+3) Open the website at the designated link (likely `localhost:5173`)
 
 To stop the project:
 
@@ -57,7 +57,7 @@ The inverted index also removes automatically stop words and is case-insensitive
 - The inverted index is modular. You can change between inverted indexes in the 
 `getInvertedIndex()` function in `api/inverted_index.py`.  
 
-**TIP:** You can add soundex capabilities by using the `SoundexInvertedIndex`.
+**TIP:** You can add soundex capabilities by using the `SoundexInvertedIndex` or uncommenting the `stringtoSoundex` function.
 
 - The tokenization algorithm is modular. You can modify the algorithm in 
 the `getInvertedIndex()` function with the `Preprocess` methods. 
@@ -119,6 +119,15 @@ design.
 environment. This decision was made after frequent bugs made collaboration difficult.
 A Dockerfile was not made for the React backend server because of the simplicity 
 and wide-adoption of npm. 
+
+- The documents were taken from a [Kaggle dataset](https://www.kaggle.com/datasets/jensenbaxter/10dataset-text-document-classification).
+The dataset is a collection of 1000 newsgroup documents. The documents can be modified, removed,
+or added if desired. **However, you must remember to rebuild the project to apply the changes.**
+If you already have the project running, you must stop the project, rebuild the project, and 
+rerun the project in that order. 
+
+- The frontend is implemented using the Material UI component library. This allows
+for a swift implementation of a clean UI for the project. 
 
 
 ## Extra Credit

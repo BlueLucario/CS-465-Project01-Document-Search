@@ -18,7 +18,7 @@ class SimpleInvertedIndex():
         if cls._instance is None:
             print('Creating new inverted index...')
             cls._instance = cls.__new__(cls)
-            cls._instance.documentPath = './documents' # Most likely overwritten by child class
+            cls._instance.documentPath = './documents' # Likely overwritten by child class
             cls._instance.preprocessPipeline = defaultPipeline # Likely overwritten
             cls._instance.indexer = defaultdict(list)
             cls._instance.documents = []
