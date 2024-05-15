@@ -7,6 +7,7 @@ import os
 from document import AbstractDocument, FlexibleDocument
 from typing import List
 from preprocess import Preprocess
+import math
 
 defaultPipeline = [Preprocess.splitByWhitespace, Preprocess.removeEmptyString, Preprocess.toLower]
 
@@ -142,25 +143,91 @@ class SoundexInvertedIndex(SimpleInvertedIndex):
             ],
         )
 
+class RankedRetrievalInvertedIndex(SimpleInvertedIndex):
+    @classmethod
+    def getInstance(cls, documentPath='./documents'):
+        return super().getInstance(
+            documentPath=documentPath, 
+            preprocessPipeline=[
+                Preprocess.splitByWhitespace,
+                Preprocess.splitBySpecialCharacter,
+                Preprocess.removeTokenWithNumber,
+                Preprocess.toLower,
+                Preprocess.removeEmptyString
+            ],
+        )
+    
+    def loadDocument(self, path):
+        with open(path, 'r', encoding='utf-8') as file:
+            data = file.read()
+            document = FlexibleDocument(path, id=self._getNextId(), 
+                                        path=path, data=data, tf={})
+            self.documents.append(document)
+            tokens = self.getTokens(data)
+            for token in tokens:
+                posting = self.indexer.get(token, [])
+                if document not in posting:
+                    posting.append(document)
+                    self.indexer[token] = posting
+                self.termFrequency[token] = self.termFrequency.get(token, 0) + 1
+                document.tf[token] = document.tf.get(token, 0) + 1
+    
+    def handleQuery(self, query: str, k: int = 5) -> List[AbstractDocument]:
+        queryWords = self.getTokens(query)
+        # print(f'Query Words: {queryWords}')
+        
+        from collections import Counter
+        queryTfMap = Counter(queryWords)
+        queryTfRaw = [queryTfMap[word] for word in queryWords]
+        queryTfWeight = [1 + math.log10(tfRaw) for tfRaw in queryTfRaw]
+        # print(f'Query Tf: {queryTfRaw}, Query Weight: {queryTfWeight}')
+        
+        matchedDocuments, queryDf = set(), []
+        for word in queryWords:
+            queryDf.append(len(self.indexer.get(word, [])))
+            matchedDocuments.update(self.indexer.get(word, []))
+        matchedDocuments = list(matchedDocuments) # Order matters 
+        
+        queryIdf = [math.log10(len(self.documents)/df_t) if df_t > 0 else 0 for df_t in queryDf]
+        # print(f'Matched Documents: {matchedDocuments}, df: {queryDf}, idf: {queryIdf}')
+        
+        queryWeight = [queryTfWeight[i] * queryIdf[i] for i in range(len(queryIdf))]
+        # print(f'Query Weight: {queryWeight}')
+        
+        docsTfRaw = [[doc.tf.get(word, 0) for word in queryWords] for doc in matchedDocuments]
+        docsTfWeight = [[1 + math.log10(tfRaw) if tfRaw > 0 else 0 for tfRaw in docVector] for docVector in docsTfRaw]
+        docsWeight = [tfWeight for tfWeight in docsTfWeight] # Since no df for documents
+        # print(f'DocTfRaw: {docTfRaw}, DocWeight: {docWeight}')
+        
+        docsMagnitude = [math.sqrt(sum(map(lambda x:x**2, docWeight))) for docWeight in docsWeight]
+        assert len(docsMagnitude) == len(docsWeight)
+        docsWeightNormalized = []
+        for i in range(len(docsWeight)):
+            docsWeightNormalized.append([docWeight / docsMagnitude[i] for docWeight in docsWeight[i]])
+        # print(f'docWeightNormalized: {docWeightNormalized}')
+        
+        scores = []
+        for i, docWeight in enumerate(docsWeight):
+            # print(queryWeight, docWeight)
+            assert len(queryWeight) == len(docWeight)
+            score = sum([queryWeight[i] * docWeight[i] for i in range(len(queryWeight))])
+            scores.append((score, i))
+        
+        scores.sort(reverse=True)
+        topKScores = scores[:k]
+        return [matchedDocuments[i] for _, i in topKScores]
+        
 def getInvertedIndex() -> SimpleInvertedIndex:
-    return FlexibleInvertedIndexWithStats.getInstance(preprocessPipeline=[
-        Preprocess.splitByWhitespace,
-        Preprocess.splitBySpecialCharacter,
-        Preprocess.removeTokenWithNumber,
-        Preprocess.toLower,
-        Preprocess.removeEmptyString,
-        Preprocess.removeStopwords,
-        #Preprocess.stringToSoundex,
-    ])
+    return RankedRetrievalInvertedIndex.getInstance()
 
 
 if __name__ == '__main__':
     invertedIndex = getInvertedIndex()
-    import json
-    with open('result.json', 'w') as fp:
-        json.dump(invertedIndex.generateStatistics(), fp)
+    # import json
+    # with open('result.json', 'w') as fp:
+    #     json.dump(invertedIndex.generateStatistics(), fp)
     
-    # query = 'cookie and milk'
-    # print(f'Results of query {query} = {invertedIndex.handleQuery(query)}')
+    query = 'cookie and milk'
+    print(f'Results of query {query} = {invertedIndex.handleQuery(query)}')
         
 
